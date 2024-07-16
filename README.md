@@ -1,11 +1,13 @@
 # Windows 11 Desktop Templates For Packer
-Based on [https://github.com/StefanScherer/packer-windows](https://github.com/StefanScherer/packer-windows)  
-which is forked from [https://github.com/joefitzgerald/packer-windows](https://github.com/joefitzgerald/packer-windows)
-
-Prebuilt images can be found here: [https://app.vagrantup.com/baunegaard](https://app.vagrantup.com/baunegaard)
+Based on [https://github.com/Baune8D/packer-windows-desktop](https://github.com/Baune8D/packer-windows-desktop)  
 
 This repository aims at creating Windows desktop boxes with a minimum of changes.  
 It will only change what is necessary for `packer` and `vagrant` to properly work.
+
+The primary differences between this fork and the base repo
+1. You can update the default username by running `update-unattend.ps1`
+2. There are some additional scripts that run during the build (see: `cleanup-nonsense.ps1` which borrows heavily from [rad1ke/Windows-11-Setup.ps1](https://gist.github.com/rad1ke/d8c4121931633eca04ca625d09ff1a11)  )
+3. The output box file will include the username specified
 
 ## Setup
 
@@ -13,7 +15,7 @@ It will only change what is necessary for `packer` and `vagrant` to properly wor
 * `Packer` available in PATH
 * **Windows 11 ISO** in `iso` folder: [See instructions](iso/README.md)
 * (Hyper-V only) Either `xorriso`, `mkisofs`, `hdiutil` og `oscdimg` in PATH
-  * `oscdimg` can be installed through the [Windows ADK](https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install)
+  * `oscdimg` can be installed through the [Windows ADK](https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install) or `choco install windows-adk-oscdimg`
 
 **To use the default settings, execute from repo root:**  
 * Windows: `.\build_windows_11.bat <vm_type>`
@@ -21,13 +23,19 @@ It will only change what is necessary for `packer` and `vagrant` to properly wor
 
 `<vm_type>` Can be either `vmware`, `virtualbox`, `parallels` or `hyperv`.
 
+**To specify a different username besides `vagrant`**
+* Windows: `.\update-unattend.ps1 <userName>`
+
+
+
+
 ## Information:
 Settings can be modified in the `windows_11.pkr.hcl` files.  
 Shared variables can be found at the bottom of the file.
 
 **NOTE** if you want to validate a checksum against your iso, change `iso_checksum` to match your iso file, e.g. `sha256:E239FF...`
 
-The result output will be a box file named: `windows_11_<vm_type>.box`
+The result output will be a box file named: `windows_11_<userName>_<vm_type>.box`
 
 Newest availble guest tools will be fetched and installed for `VMware` and `Virtualbox`.  
 For `Parallels`, the guest tools of the version you are building with is installed.

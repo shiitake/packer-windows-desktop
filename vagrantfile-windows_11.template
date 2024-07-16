@@ -1,6 +1,27 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+user_name = "shannon"
+
+base_directory = "D:\\Virtual Machines\\vagrant"
+VAGRANT_DOTFILE_PATH = "#{base_directory}\\.vagrant"
+
+currpath = ENV['VAGRANT_DOTFILE_PATH'];
+if(currpath.nil?)
+    currpath = '.vagrant';
+end
+puts currpath #debugging
+if(currpath != VAGRANT_DOTFILE_PATH)
+    ENV['VAGRANT_DOTFILE_PATH'] = VAGRANT_DOTFILE_PATH
+    ret = system "vagrant",*ARGV
+    FileUtils.rm_r(currpath)
+    if(ret)
+      exit
+    else
+      abort "Finished"
+    end
+end
+
 Vagrant.require_version ">= 1.6.2"
 
 Vagrant.configure("2") do |config|
@@ -9,15 +30,15 @@ Vagrant.configure("2") do |config|
   config.vm.communicator = "winrm"
 
   # Admin user name and password
-  config.winrm.username = "vagrant"
-  config.winrm.password = "vagrant"
+  config.winrm.username = "#{user_name}"
+  config.winrm.password = "#{user_name}"
 
   config.vm.guest = :windows
   config.windows.halt_timeout = 15
 
   config.vm.provider :hyperv do |v|
-    v.cpus = 2
-    v.maxmemory = 4096
+    v.cpus = 8
+    v.maxmemory = 16384
   end
 
   config.vm.provider :virtualbox do |v|

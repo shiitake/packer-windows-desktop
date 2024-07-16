@@ -40,12 +40,12 @@ variable "headless" {
 
 variable "iso_checksum" {
   type    = string
-  default = "none"
+  default = "36DE5ECB7A0DAA58DCE68C03B9465A543ED0F5498AA8AE60AB45FB7C8C4AE402"
 }
 
 variable "iso_url" {
   type    = string
-  default = "./iso/Windows_11.iso"
+  default = "./iso/Win11_23H2_English_x64v2.iso"
 }
 
 variable "memory" {
@@ -58,6 +58,14 @@ variable "vm_name" {
   default = "windows_11"
 }
 
+variable "username" {
+  type = string  
+}
+
+variable "password" {
+  type = string
+}
+
 source "hyperv-iso" "hyperv" {
   boot_command                      = ["a<wait>a<wait>a"]
   boot_wait                         = "-1s"
@@ -68,7 +76,8 @@ source "hyperv-iso" "hyperv" {
                                       "./scripts/disable-winrm.ps1",
                                       "./scripts/enable-winrm.ps1",
                                       "./scripts/microsoft-updates.ps1",
-                                      "./scripts/win-updates.ps1"
+                                      "./scripts/win-updates.ps1",
+                                      "./scripts/cleanup-nonsense.ps1"
                                     ]
   communicator                      = "winrm"
   configuration_version             = "10.0"
@@ -87,9 +96,9 @@ source "hyperv-iso" "hyperv" {
   shutdown_command                  = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
   switch_name                       = "Default Switch"
   vm_name                           = "${var.vm_name}"
-  winrm_password                    = "vagrant"
+  winrm_password                    = "${var.password}"
   winrm_timeout                     = "6h"
-  winrm_username                    = "vagrant"
+  winrm_username                    = "${var.username}"
 }
 
 source "parallels-iso" "parallels" {
@@ -115,9 +124,9 @@ source "parallels-iso" "parallels" {
   prlctl                            = [["set", "{{ .Name }}", "--efi-secure-boot", "on"], ["set", "{{ .Name }}", "--tpm", "on"]]
   shutdown_command                  = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
   vm_name                           = "${var.vm_name}"
-  winrm_password                    = "vagrant"
+  winrm_password                    = "${var.password}"
   winrm_timeout                     = "6h"
-  winrm_username                    = "vagrant"
+  winrm_username                    = "${var.username}"
 }
 
 source "virtualbox-iso" "virtualbox" {
@@ -203,7 +212,7 @@ build {
 
   post-processor "vagrant" {
     keep_input_artifact  = false
-    output               = "windows_11_{{ .Provider }}.box"
+    output               = "windows_11_${var.username}_{{ .Provider }}.box"
     vagrantfile_template = "vagrantfile-windows_11.template"
   }
 }

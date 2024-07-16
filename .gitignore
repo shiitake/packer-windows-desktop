@@ -97,3 +97,5 @@ tmp
 *.iso
 path-to.vmx
 packer
+
+answer_files/11_hyperv/Autounattend.xml
