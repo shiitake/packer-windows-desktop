@@ -30,10 +30,12 @@
                 <AcceptEula>true</AcceptEula>
                 <FullName>Vagrant</FullName>
                 <Organization>Vagrant</Organization>
+                <!--
                 <ProductKey>
                     <Key>W269N-WFGWX-YVC9B-4J6C9-T83GX</Key>
                     <WillShowUI>Never</WillShowUI>
                 </ProductKey>
+                -->
             </UserData>
             <ImageInstall>
                 <OSImage>

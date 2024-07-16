@@ -17,21 +17,23 @@ The primary differences between this fork and the base repo
 * (Hyper-V only) Either `xorriso`, `mkisofs`, `hdiutil` og `oscdimg` in PATH
   * `oscdimg` can be installed through the [Windows ADK](https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install) or `choco install windows-adk-oscdimg`
 
+
+**To specify a different username besides `vagrant`**
+* Windows: `.\update-unattend.ps1 <userName>`
+
+
 **To use the default settings, execute from repo root:**  
 * Windows: `.\build_windows_11.bat <vm_type>`
 * Linux / macOS: `./build_windows_11.sh <vm_type>`
 
 `<vm_type>` Can be either `vmware`, `virtualbox`, `parallels` or `hyperv`.
 
-**To specify a different username besides `vagrant`**
-* Windows: `.\update-unattend.ps1 <userName>`
-
-
-
 
 ## Information:
 Settings can be modified in the `windows_11.pkr.hcl` files.  
 Shared variables can be found at the bottom of the file.
+
+If you're using a retail version of Windows 11 then you'll need to uncomment and update the <ProductKey> section in `Autounattend.Base.xml` with a valid product key otherwise  the build will hang while installing the Windows updates. 
 
 **NOTE** if you want to validate a checksum against your iso, change `iso_checksum` to match your iso file, e.g. `sha256:E239FF...`
 
